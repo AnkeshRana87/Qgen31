@@ -1,0 +1,5 @@
+CP NAME : Pick Released List Report Japan AR
+
+SHORT NAME : PICK_RLS_RPT_JPN_AR
+
+EXECUTABLE : XDODTEXE
