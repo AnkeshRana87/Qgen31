@@ -1,0 +1,172 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+
+<dataTemplate name="XXQGEN_REQ_IMPT_RPT_AR"  version="1.0">
+<properties>
+	<property name="xml_tag_case" value="upper"/>
+</properties>
+<parameters>
+<parameter name="P_REQUEST_ID" dataType="character"/>
+</parameters> 
+<dataQuery>
+<sqlStatement name="Q_1">
+<![CDATA[
+SELECT HDR.PROCESS_FLAG
+, PRHA.SEGMENT1
+,PRHA.REQUISITION_HEADER_ID
+, HDR.PREPARER
+, HDR.OPERATING_UNIT
+, HDR.AUTHORIZATION_STATUS
+, HDR.DESCRIPTION
+, HDR.REQUISITION_TYPE
+, PRLA.REQUISITION_LINE_ID
+, LINE.LINE_TYPE
+, LINE.ITEM_NUMBER
+, LINE.ITEM_DESCRIPTION
+, LINE.CATEGORY
+, LINE.UOM
+, LINE.QUANTITY
+, LINE.UNIT_PRICE
+, LINE.CURRENCY_CODE
+, LINE.REQUESTER
+, LINE.NEED_BY_DATE
+, LINE.ORGANIZATION
+, LINE.SUPPLIER
+, LINE.SITE
+, LINE.CONTACT
+, LINE.PHONE
+, LINE.DESTINATION_TYPE
+, LINE.SOURCE
+, PRDA.DISTRIBUTION_ID
+, LINE.CHARGE_ACCOUNT
+FROM XXQGEN_PO_REQ_HEADERS_STG_AR HDR 
+, XXQGEN_PO_REQ_LINES_STG_AR LINE
+, PO_REQUISITION_HEADERS_ALL PRHA
+, PO_REQUISITION_LINES_ALL PRLA
+, PO_REQ_DISTRIBUTIONS_ALL PRDA
+WHERE 1=1
+AND HDR.REQUISITION_NUMBER = LINE.REQUISITION_NUMBER
+AND (HDR.PROCESS_FLAG = 'V' OR HDR.PROCESS_FLAG = 'P')
+AND (LINE.PROCESS_FLAG = 'V' OR LINE.PROCESS_FLAG = 'P')
+AND HDR.REQUEST_ID= PRHA.ATTRIBUTE7
+AND PRHA.REQUISITION_HEADER_ID = PRLA.REQUISITION_HEADER_ID
+AND PRLA.REQUISITION_LINE_ID = PRDA.REQUISITION_LINE_ID
+AND HDR.REQUEST_ID = :P_REQUEST_ID
+				 ]]>
+</sqlStatement>
+<sqlStatement name="Q_2">
+<![CDATA[
+
+
+SELECT HDR.PROCESS_FLAG
+, HDR.ERROR_MESSAGE
+, PRHA.SEGMENT1
+,PRHA.REQUISITION_HEADER_ID
+,HDR.PREPARER
+, HDR.OPERATING_UNIT
+, HDR.AUTHORIZATION_STATUS
+, HDR.DESCRIPTION
+, HDR.REQUISITION_TYPE
+,PRLA.REQUISITION_LINE_ID
+, LINE.LINE_TYPE
+, LINE.ITEM_NUMBER
+, LINE.ITEM_DESCRIPTION
+, LINE.CATEGORY
+, LINE.UOM
+, LINE.QUANTITY
+, LINE.UNIT_PRICE
+, LINE.CURRENCY_CODE
+, LINE.REQUESTER
+, LINE.NEED_BY_DATE
+, LINE.ORGANIZATION
+, LINE.SUPPLIER
+, LINE.SITE
+, LINE.CONTACT
+, LINE.PHONE
+, LINE.DESTINATION_TYPE
+, LINE.SOURCE
+,PRDA.DISTRIBUTION_ID
+,PRDA.CODE_COMBINATION_ID
+, LINE.CHARGE_ACCOUNT
+, LINE.ERROR_MESSAGE
+FROM XXQGEN_PO_REQ_HEADERS_STG_AR HDR 
+, XXQGEN_PO_REQ_LINES_STG_AR LINE
+, PO_REQUISITION_HEADERS_ALL PRHA
+, PO_REQUISITION_LINES_ALL PRLA
+, PO_REQ_DISTRIBUTIONS_ALL PRDA
+WHERE 1=1
+AND HDR.REQUISITION_NUMBER = LINE.REQUISITION_NUMBER
+AND HDR.PROCESS_FLAG = 'E'
+AND LINE.PROCESS_FLAG = 'E'
+AND HDR.REQUEST_ID= PRHA.ATTRIBUTE7
+AND PRHA.REQUISITION_HEADER_ID = PRLA.REQUISITION_HEADER_ID
+AND PRLA.REQUISITION_LINE_ID = PRDA.REQUISITION_LINE_ID
+AND HDR.REQUEST_ID = :P_REQUEST_ID
+				 ]]>
+</sqlStatement>
+</dataQuery>
+
+	<dataStructure>
+
+	
+		<group name="G_1" dataType="varchar2" source="Q_1">	
+			<element name="SEGMENT1" dataType="NUMBER" value="SEGMENT1"/>
+			<element name="REQUISITION_HEADER_ID" dataType="NUMBER" value="REQUISITION_HEADER_ID"/>
+			<element name="PREPARER" dataType="NUMBER" value="PREPARER"/>
+			<element name="OPERATING_UNIT" dataType="varchar2" value="OPERATING_UNIT"/>
+			<element name="AUTHORIZATION_STATUS" dataType="varchar2" value="AUTHORIZATION_STATUS"/>
+			<element name="DESCRIPTION" dataType="NUMBER" value="DESCRIPTION"/>
+			<element name="REQUISITION_TYPE" dataType="NUMBER" value="REQUISITION_TYPE"/>
+			<element name="REQUISITION_LINE_ID" dataType="NUMBER" value="REQUISITION_LINE_ID"/>
+			<element name="LINE_TYPE" dataType="NUMBER" value="LINE_TYPE"/>
+			<element name="ITEM_NUMBER" dataType="NUMBER" value="ITEM_NUMBER"/>
+			<element name="ITEM_DESCRIPTION" dataType="NUMBER" value="ITEM_DESCRIPTION"/>
+			<element name="CATEGORY" dataType="NUMBER" value="CATEGORY"/>
+			<element name="UOM" dataType="NUMBER" value="UOM"/>
+			<element name="QUANTITY" dataType="NUMBER" value="QUANTITY"/>
+			<element name="UNIT_PRICE" dataType="NUMBER" value="UNIT_PRICE"/>
+			<element name="CURRENCY_CODE" dataType="NUMBER" value="CURRENCY_CODE"/>
+			<element name="REQUESTER" dataType="NUMBER" value="REQUESTER"/>
+			<element name="NEED_BY_DATE" dataType="NUMBER" value="NEED_BY_DATE"/>
+			<element name="ORGANIZATION" dataType="NUMBER" value="ORGANIZATION"/>
+			<element name="SUPPLIER" dataType="NUMBER" value="SUPPLIER"/>
+			<element name="SITE" dataType="NUMBER" value="SITE"/>
+			<element name="CONTACT" dataType="NUMBER" value="CONTACT"/>
+			<element name="PHONE" dataType="NUMBER" value="PHONE"/>
+			<element name="DESTINATION_TYPE" dataType="NUMBER" value="DESTINATION_TYPE"/>
+			<element name="SOURCE" dataType="NUMBER" value="SOURCE"/>
+			<element name="DISTRIBUTION_ID" dataType="NUMBER" value="DISTRIBUTION_ID"/>
+			<element name="CHARGE_ACCOUNT" dataType="NUMBER" value="CHARGE_ACCOUNT"/>
+
+		</group>
+		<group name="G_2" dataType="varchar2" source="Q_2">	
+			<element name="SEGMENT1" dataType="NUMBER" value="SEGMENT1"/>
+			<element name="REQUISITION_HEADER_ID" dataType="NUMBER" value="REQUISITION_HEADER_ID"/>
+			<element name="PREPARER" dataType="NUMBER" value="PREPARER"/>
+			<element name="OPERATING_UNIT" dataType="varchar2" value="OPERATING_UNIT"/>
+			<element name="AUTHORIZATION_STATUS" dataType="varchar2" value="AUTHORIZATION_STATUS"/>
+			<element name="DESCRIPTION" dataType="NUMBER" value="DESCRIPTION"/>
+			<element name="REQUISITION_TYPE" dataType="NUMBER" value="REQUISITION_TYPE"/>
+			<element name="REQUISITION_LINE_ID" dataType="NUMBER" value="REQUISITION_LINE_ID"/>
+			<element name="LINE_TYPE" dataType="NUMBER" value="LINE_TYPE"/>
+			<element name="ITEM_NUMBER" dataType="NUMBER" value="ITEM_NUMBER"/>
+			<element name="ITEM_DESCRIPTION" dataType="NUMBER" value="ITEM_DESCRIPTION"/>
+			<element name="CATEGORY" dataType="NUMBER" value="CATEGORY"/>
+			<element name="UOM" dataType="NUMBER" value="UOM"/>
+			<element name="QUANTITY" dataType="NUMBER" value="QUANTITY"/>
+			<element name="UNIT_PRICE" dataType="NUMBER" value="UNIT_PRICE"/>
+			<element name="CURRENCY_CODE" dataType="NUMBER" value="CURRENCY_CODE"/>
+			<element name="REQUESTER" dataType="NUMBER" value="REQUESTER"/>
+			<element name="NEED_BY_DATE" dataType="NUMBER" value="NEED_BY_DATE"/>
+			<element name="ORGANIZATION" dataType="NUMBER" value="ORGANIZATION"/>
+			<element name="SUPPLIER" dataType="NUMBER" value="SUPPLIER"/>
+			<element name="SITE" dataType="NUMBER" value="SITE"/>
+			<element name="CONTACT" dataType="NUMBER" value="CONTACT"/>
+			<element name="PHONE" dataType="NUMBER" value="PHONE"/>
+			<element name="DESTINATION_TYPE" dataType="NUMBER" value="DESTINATION_TYPE"/>
+			<element name="SOURCE" dataType="NUMBER" value="SOURCE"/>
+			<element name="DISTRIBUTION_ID" dataType="NUMBER" value="DISTRIBUTION_ID"/>
+			<element name="CHARGE_ACCOUNT" dataType="NUMBER" value="CHARGE_ACCOUNT"/>
+			<element name="ERROR_MESSAGE" dataType="NUMBER" value="ERROR_MESSAGE"/>
+		</group>
+	</dataStructure>
+</dataTemplate>
