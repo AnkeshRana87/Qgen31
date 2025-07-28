@@ -1,0 +1,50 @@
+--DATA LOADNIG
+
+TYPE : SQLLDR
+EXECUTABLE NAME : XXQGEN_ITEM_DATA_AR
+EXECUTABLE FILE SQL LOADER : item_creation
+
+
+NEW :
+
+TYPE : HOST
+EXECUTABLE NAME SHELL : XXQGEN_ITEM_DATA_AR2
+EXECUTABLE FILE HOST : item_creation2
+
+LOADER PROGRAM NAME : XXQGEN Item Data Load Program AR
+SHORT NAME : XXQGEN_ITEM_DATA_AR
+
+
+
+*****************************************************************************
+
+IMPORT PROGRAM NAME : XXQGEN Item Creation Program AR
+
+SHORT NAME : XXQGEN_ITEM_CREATION_AR
+
+EXECUTABLE NAME : XXQGEN_ITEM_CREATION_AR
+
+EXECUTION FILE NAME : XXQGEN_ITEM_CREATION_AR.MAIN
+
+
+********************************************************************************
+
+
+UPDATE PROGRAM NAME : XXQGEN Update Item Form Program AR
+
+SHORT NAME : XXQGEN_UPDATE_ITEM_FORM_AR
+
+EXECUTABLE NAME : XXQGEN_UPDATE_ITEM_FORM_AR
+
+EXECUTION FILE NAME : XXQGEN_UPDATE_ITEM_FORM_AR.MAIN
+
+
+*****************************************************************************
+
+RDF REPORT :
+
+EXECUTABLE NAME : XXQGEN_ITEM_RPT_AR
+FILE : XXQGEN_ITEM_RPT_AR
+
+PROGRAM NAME : XXQGEN Item Creation Rdf Report AR
+SHORT NAME : XXQGEN_ITEM_RPT_AR

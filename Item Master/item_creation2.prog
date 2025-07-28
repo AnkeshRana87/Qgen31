@@ -1,0 +1,30 @@
+echo "Internal Parameters"
+p0=$0
+p1=$1
+p2=$2
+p3=$3
+p4=$4
+echo "1st System Parameter    :"$p0
+echo "2nd System Parameter    :"$p1
+echo "3rd System Parameter    :"$p2
+echo "4th System Parameter    :"$p3
+echo "5th System Parameter    :"$p4
+echo "User Parameters:"
+p5=$5
+echo "5th System Parameter    :"$p5
+echo "Setting up directories..."
+bin_dir="/u01/install/VISION/fs1/EBSapps/appl/inv/12.0.0/bin"
+control_file="${bin_dir}/${p5}"
+LOG_DIR="${bin_dir}/ARANA/AR_LOGS"
+mkdir -p "$LOG_DIR"
+echo "Using control file: $control_file"
+echo "Starting sqlldr for each CSV file..."
+for file in "$bin_dir/ARANA"/*.csv; do
+    filename=$(basename "$file" .csv)
+    log_file="$LOG_DIR/${filename}_$(date '+%Y-%m-%d_%H-%M-%S').log"
+    echo "Processing file: $file"
+    sqlldr userid=apps/apps control="$control_file.ctl" data="$file" log="$log_file"
+done
+echo "***********************************************************************"
+echo "Script execution finished at $(date)"
+echo "Process completed. Exiting."

@@ -1,0 +1,32 @@
+echo "System Parameters"
+p0=$0
+p1=$1
+p2=$2
+p3=$3
+p4=$4
+echo "1st System Parameter    :"$p0
+echo "2nd System Parameter    :"$p1
+echo "3rd System Parameter    :"$p2
+echo "4th System Parameter    :"$p3
+echo "5th System Parameter    :"$p4
+echo "running sql-ldr"
+echo "User Parameters"
+p5=$5
+echo "5th Parameter    :"$p5
+echo "custom directory"
+bin_ar="/u01/install/VISION/fs1/EBSapps/appl/inv/12.0.0/bin/ARANA"
+bin="/u01/install/VISION/fs1/EBSapps/appl/inv/12.0.0/bin"
+echo "running sql-ldr"
+LOG_DIR="/u01/install/VISION/fs1/EBSapps/appl/inv/12.0.0/bin/ARANA/AR_LOGS"
+LOG_FILE="$LOG_DIR/${p5}$(date '+%Y-%m-%d_%H-%M-%S').log"
+mkdir -p "$LOG_DIR"
+BAD_DIR="/u01/install/VISION/fs1/EBSapps/appl/inv/12.0.0/bin/ARANA/AR_BADS"
+BAD_FILE="$BAD_DIR/${p5}$(date '+%Y-%m-%d_%H-%M-%S').log"
+mkdir -p "$BAD_DIR"
+for file in /u01/install/VISION/fs1/EBSapps/appl/inv/12.0.0/bin/ARANA/${p5}; do
+echo "running" $file
+sqlldr userid=apps/apps control="$bin/item_creation.ctl" data="$file" log="$LOG_DIR/item_creation$(date '+%Y-%m-%d_%H-%M-%S.%3N').log" bad="$BAD_DIR/item_creation$(date '+%Y-%m-%d_%H-%M-%S.%3N').BAD"
+done
+echo "***********************************************************************"
+echo "script execution finished at $(date)"
+echo "proces compleated exiting"

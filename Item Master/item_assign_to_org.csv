@@ -1,0 +1,8 @@
+ITEM_CODE,TARGET_ORG,TARGET_ORG_ID
+ITEM003,Seattle Manufacturing,207
+ITEM004,Chicago Subassembly Plant,208
+ITEM005,Boston Manufacturing,209
+ITEM999,Boston Manufacturing,209
+AR0004,Seattle Manufacturing,207
+AR0005,Seattle Manufacturing,207
+AR0006,Chicago Subassembly Plant,208
