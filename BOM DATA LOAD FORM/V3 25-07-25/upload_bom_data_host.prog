@@ -1,0 +1,22 @@
+echo "Internal Parameters" 
+p0=$0
+p1=$1
+p2=$2
+p3=$3
+p4=$4
+echo "1st Parameter    	:"$p0
+echo "2nd  Parameter    :"$p1
+echo "3rd  Parameter    :"$p2
+echo "4th  Parameter    :"$p3
+echo "5th  Parameter    :"$p4
+echo "running sql-ldr"
+echo "Following are user Parameters"
+p5=$5
+echo "1st user Parameter    :"$p5
+echo "start"
+control="/a01/install/DEV/fs1/EBSapps/appl/xxfil/12.0.0/bin/upload_bom_data.ctl"
+data="/a01/install/DEV/fs1/EBSapps/appl/xxfil/12.0.0/bin/UPLOAD_BOM_DATA_TEST.csv"
+log_file="/a01/install/DEV/fs1/EBSapps/appl/xxfil/12.0.0/bin/UPLOAD_BOM_DATA_TEST.log"
+sqlldr userid=$p0 control="$control" data="$data"
+
+

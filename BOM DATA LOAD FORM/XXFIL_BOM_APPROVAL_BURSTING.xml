@@ -1,0 +1,15 @@
+<xapi:requestset xmlns:xapi="http://xmlns.oracle.com/oxp/xapi" type="bursting">
+<xapi:request select="/XXFIL_BOM_APPROVAL/LIST_G_MAIN">
+<xapi:delivery>
+<xapi:email id="123" server="172.16.22.9" port="" from="notification@flexfilm.com">
+<xapi:message id="123" to="${TO_MAIL}" cc="${FROM_MAIL}" bcc="" attachment="true" content-type="text/HTML" subject="${C_DESCRIPTION}">
+<![CDATA[ <html> <body> <pre>Hi,<br/><br/>${MAIL_BODY}</pre><hr/>Please find Attached new formula details ,<br/><br/>You can check the details in application using batch id : ${BATCH_ID}<br/><br/>kindly review and do the needfull.
+<br/><br/>Thanks. </body> </html> ]]>
+</xapi:message>
+</xapi:email>
+</xapi:delivery>
+<xapi:document output="/a01/install/DEV/fs1/EBSapps/appl/xxfil/12.0.0/bin/XXFIL_BOM_APPROVAL${CP_REQUEST_ID1}.pdf" output-type="pdf" delivery="123">
+<xapi:template type="RTF" location="xdo://XXFIL.XXFIL_BOM_APPROVAL.en.US/?getSource=true"> </xapi:template>
+</xapi:document>
+</xapi:request>
+</xapi:requestset>
