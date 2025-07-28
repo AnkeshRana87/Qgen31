@@ -1,0 +1,74 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+
+<dataTemplate name="XXFIL_BOM_APPROVAL" defaultPackage="XXFIL_BOM_BURSTING_PKG" version="1.0">
+  <properties>
+    <property name="xml_tag_case" value="upper"/>
+  </properties>
+
+  <parameters>
+  <parameter name="P_FORMULA_STATUS" dataType="character"/>
+  <parameter name="P_FROM_MAIL" dataType="character"/>
+    <parameter name="P_TO_MAIL" dataType="character"/>
+    <parameter name="P_BATCH_ID" dataType="character"/>
+
+  </parameters> 
+
+  <dataQuery>
+    <sqlStatement name="Q_1">
+      <![CDATA[
+        SELECT 
+            product, 
+            rm_code,
+            rm_description,
+            quantity,
+            avg_speed,
+            width,
+            PRODUCTION_LINE,
+            STATUS,
+            OPERATING_UNIT,
+            BATCH_ID 
+            , NVL(:P_TO_MAIL,'arana@quadragensolutions.com') TO_MAIL
+            , NVL(:P_FROM_MAIL,'notification@flexfilm.com') FROM_MAIL
+            , 'BOM Formula Data Approval' C_DESCRIPTION
+            , FND_PROFILE.value('USERNAME') USER_NAME             
+            , DECODE(:P_FORMULA_STATUS ,'NEW',(INITIATER||' has uploaded the new formulas successfully.'),'APPROVED',('The formula data has been Approved by '||APPROVER),'FAILED','The formula creation is falied for the following reason : '||REJECTION_REASON,'REJECTED','The data has been rejected by '||APPROVER||' for the following reason : '||REJECTION_REASON)  MAIL_BODY
+        FROM 
+            XXFIL_BOM_STG
+        WHERE 
+        1=1      
+        AND RM_CODE IS NOT NULL 
+        AND RM_DESCRIPTION IS NOT NULL
+        AND STATUS = :P_FORMULA_STATUS
+        AND BATCH_ID = :P_BATCH_ID    
+              ]]>
+    </sqlStatement>
+  </dataQuery>
+
+  <dataTrigger name="beforeReportTrigger" source="XXFIL_BOM_BURSTING_PKG.beforeReport"/>
+  <dataTrigger name="afterReportTrigger" source="XXFIL_BOM_BURSTING_PKG.afterReport"/>
+
+  <dataStructure>
+    <!-- <element name="FROM_MAIL1" dataType="varchar2" value="XXFIL_BOM_BURSTING_PKG.lc_from_mail"/> -->
+    <!-- <element name="TO_MAIL1" dataType="varchar2" value="XXFIL_BOM_BURSTING_PKG.lc_to_mail"/> -->
+    <!-- <element name="CP_DESC1" dataType="varchar2" value="XXFIL_BOM_BURSTING_PKG.cp_desc"/> -->
+    <element name="CP_REQUEST_ID1" dataType="varchar2" value="XXFIL_BOM_BURSTING_PKG.cp_request_id"/>
+
+    <group name="G_MAIN" dataType="varchar2" source="Q_1">  
+      <element name="PRODUCT" dataType="varchar2" value="product"/>
+      <element name="C_DESCRIPTION" dataType="varchar2" value="C_DESCRIPTION"/>
+      <element name="USER_NAME" dataType="varchar2" value="USER_NAME"/>
+      <element name="RM_CODE" dataType="varchar2" value="rm_code"/>
+      <element name="RM_DESCRIPTION" dataType="varchar2" value="rm_description"/>
+      <element name="QUANTITY" dataType="varchar2" value="quantity"/>
+      <element name="AVG_SPEED" dataType="varchar2" value="avg_speed"/>
+      <element name="WIDTH" dataType="varchar2" value="width"/>
+      <element name="PRODUCTION_LINE" dataType="varchar2" value="PRODUCTION_LINE"/>
+      <element name="STATUS" dataType="varchar2" value="STATUS"/>
+      <element name="OPERATING_UNIT" dataType="varchar2" value="OPERATING_UNIT"/>
+	  <element name="BATCH_ID" dataType="varchar2" value="BATCH_ID"/>
+	  <element name="MAIL_BODY" dataType="varchar2" value="MAIL_BODY"/>
+	  <element name="TO_MAIL" dataType="varchar2" value="TO_MAIL"/>
+	  <element name="FROM_MAIL" dataType="varchar2" value="FROM_MAIL"/>
+    </group>
+  </dataStructure>
+</dataTemplate>
