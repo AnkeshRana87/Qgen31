@@ -1,0 +1,90 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+
+<dataTemplate name="XXQGEN_RCV_RPT_AR"  version="1.0">
+<properties>
+	<property name="xml_tag_case" value="upper"/>
+</properties>
+<parameters>
+<parameter name="P_RECEIPT_NUM" dataType="character"/>
+</parameters> 
+<dataQuery>
+<sqlStatement name="Q_1">
+<![CDATA[
+Select mil.concatenated_segments storage_location,
+       rsh.receipt_num,
+       assa.country,
+       assa.fob_lookup_code incoterms,
+       mmt.currency_code,
+       (SELECT ieb.bank_account_num
+          FROM IBY_EXTERNAL_PAYEES_ALL  iep,
+               IBY_PMT_INSTR_USES_ALL   ipi,
+               IBY_EXT_BANK_ACCOUNTS    ieb
+         WHERE 1=1
+           AND iep.ext_payee_id = ipi.ext_pmt_party_id(+)
+           AND ipi.instrument_id = ieb.ext_bank_account_id
+           AND ipi.instrument_type = 'BANKACCOUNT'
+           AND TRUNC (SYSDATE) < TRUNC (NVL (ipi.end_date, SYSDATE + 1))
+           AND iep.payment_function = 'PAYABLES_DISB'
+           AND iep.supplier_site_id = assa.vendor_site_id
+           AND rownum <= 1) account_number,
+       msib.segment1 item,
+       mmt.TRANSACTION_QUANTITY qty,
+       mmt.TRANSACTION_UOM uom,
+       NULL comodity_code,
+       msib.description,
+       assa.country,
+       msib.unit_weight,
+       (mmt.Transaction_quantity * mmt.transaction_cost) net_value,
+       rt.quantity,
+       pha.segment1 po_number,
+       pha.creation_date gl_date      
+--,rt.*
+from rcv_shipment_headers rsh ,
+     rcv_shipment_lines rsl,
+     rcv_transactions rt,
+     po_headers_all pha,
+     mtl_material_transactions mmt,
+     mtl_item_locations_kfv mil,
+     ap_supplier_sites_all assa,
+     mtl_system_items_b msib  
+where rsh.shipment_header_id=rsl.shipment_header_id
+and rsl.shipment_header_id=rt.shipment_header_id
+and rsl.SHIPMENT_LINE_ID=rt.SHIPMENT_LINE_ID
+AND rt.po_header_id = pha.po_header_id
+and rt.transaction_id=mmt.RCV_TRANSACTION_ID
+AND mmt.locator_id = mil.inventory_location_id
+AND mmt.inventory_item_id = msib.inventory_item_id
+AND mmt.organization_id = msib.organization_id
+AND rt.vendor_site_id = assa.vendor_site_id
+--and transaction_source_id = 103
+--and transaction_type_id = 18
+and rt.transaction_type='DELIVER'
+AND PHA.ORG_ID = 204
+AND RSH.RECEIPT_NUM = :P_RECEIPT_NUM
+				 ]]>
+</sqlStatement>
+</dataQuery>
+	<dataStructure>
+		<group name="G_MAIN" dataType="varchar2" source="Q_1">	
+			<element name="STORAGE_LOCATION" dataType="NUMBER" value="storage_location"/>
+			<element name="RECEIPT_NUM" dataType="NUMBER" value="receipt_num"/>
+			<element name="COUNTRY" dataType="NUMBER" value="country"/>
+			<element name="INCOTERMS" dataType="varchar2" value="incoterms"/>
+			<element name="CURRENCY_CODE" dataType="varchar2" value="currency_code"/>
+			<element name="ACCOUNT_NUMBER" dataType="NUMBER" value="account_number"/>
+		<group name="G3_MAIN" dataType="varchar2" source="Q_1">	
+			<element name="ITEM" dataType="NUMBER" value="item"/>
+			<element name="QTY" dataType="NUMBER" value="qty"/>
+			<element name="UOM" dataType="NUMBER" value="uom"/>
+			<element name="COMODITY_CODE" dataType="NUMBER" value="comodity_code"/>
+			<element name="DESCRIPTION" dataType="NUMBER" value="description"/>
+			<element name="COUNTRY" dataType="NUMBER" value="country"/>
+			<element name="UNIT_WEIGHT" dataType="NUMBER" value="unit_weight"/>
+			<element name="NET_VALUE" dataType="NUMBER" value="net_value"/>
+			<element name="QUANTITY" dataType="NUMBER" value="quantity"/>
+			<element name="PO_NUMBER" dataType="NUMBER" value="po_number"/>
+			<element name="gl_date" dataType="NUMBER" value="gl_date"/>
+		</group>
+		</group>		
+	</dataStructure>
+</dataTemplate>
