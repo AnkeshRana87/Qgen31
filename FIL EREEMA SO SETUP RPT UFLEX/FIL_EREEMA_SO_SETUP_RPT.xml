@@ -1,0 +1,96 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<dataTemplate name="FIL_EREEMA_SO_SETUP_RPT"  version="1.0">
+<properties>
+	<property name="xml_tag_case" value="upper"/>
+</properties>
+<parameters>
+</parameters> 
+<dataQuery>
+<sqlStatement name="Q_MAIN">
+<![CDATA[
+SELECT   record_id,
+         org_id,
+         line_org_id,
+         rec_item,
+         TO_CHAR(creation_date,'DD-MON-RRRR') creation_date,
+         lot,
+         rec_qty,
+         organization_code,
+         document_number,
+         transfer_qty,
+         order_qty,
+         so_number,
+         TO_CHAR(so_date,'DD-MON-RRRR')so_date,
+         po_number,
+         TO_CHAR(po_date,'DD-MON-RRRR')po_date,
+         receipt_num,
+         TO_CHAR(receipt_date,'DD-MON-RRRR')receipt_date,
+         tax_invoice_num
+FROM     (SELECT rec_qty,
+                 record_id,
+                 msi.segment1 rec_item,
+                 stg.creation_date,
+                 lot,
+                 mp.organization_code,
+                 document_number,
+                 oha.order_number so_number,
+                 oha.creation_date so_date,
+                 phanrg.segment1 po_number,
+                 phanrg.creation_date po_date,
+                 rsh.receipt_num,
+                 rsh.creation_date receipt_date,
+                 (SELECT tax_invoice_num
+                  FROM   ra_customer_trx_all rct, jai_tax_lines jtl
+                  WHERE  1 = 1
+                  AND    interface_header_attribute1 =
+                                                    TO_CHAR (oha.order_number)
+                  AND    trx_id = customer_trx_id
+                  AND    ROWNUM = 1
+                  AND    entity_code = 'TRANSACTIONS'
+                  AND    rct.org_id = stg.line_org_id) tax_invoice_num,
+                 transfer_qty,
+                 order_qty,
+                 stg.org_id,
+                 stg.line_org_id
+          FROM   xxfil.xxuflex_erema_prcocess_stg stg,
+                 po_headers_all phanrg,
+                 oe_order_headers_all oha,
+                 rcv_shipment_headers rsh,
+                 mtl_system_items_b msi,
+                 mtl_parameters mp
+          WHERE  phanrg.po_header_id(+) = nrg_po_header_id
+          AND    oha.header_id(+) = so_header_id
+          AND    msi.inventory_item_id = item_id
+          AND    msi.organization_id = stg.organization_id
+          AND    rsh.shipment_header_id(+) = nrg_shipment_header_id
+          AND    mp.organization_id = stg.organization_id
+          AND    shift_date IS NULL)
+          where line_org_id =82
+          and organization_code ='FDB'
+ORDER BY record_id DESC
+]]>
+</sqlStatement>
+</dataQuery>
+	<dataStructure>
+		<group name="G_MAIN" dataType="varchar2" source="Q_MAIN">	
+			<element name="RECORD_ID" dataType="varchar2" value="record_id"/>
+			<element name="ORG_ID" dataType="varchar2" value="org_id"/>
+			<element name="LINE_ORG_ID" dataType="varchar2" value="line_org_id"/>
+			<element name="REC_ITEM" dataType="NUMBER" value="rec_item"/>
+			<element name="CREATION_DATE" dataType="NUMBER" value="creation_date"/>
+			<element name="LOT" dataType="NUMBER" value="lot"/>
+			<element name="REC_QTY" dataType="NUMBER" value="rec_qty"/>
+			<element name="ORGANIZATION_CODE" dataType="NUMBER" value="organization_code"/>
+			<element name="DOCUMENT_NUMBER" dataType="NUMBER" value="document_number"/>
+			<element name="TRANSFER_QTY" dataType="NUMBER" value="transfer_qty"/>
+			<element name="ORDER_QTY" dataType="NUMBER" value="order_qty"/>
+			<element name="SO_NUMBER" dataType="NUMBER" value="so_number"/>
+			<element name="SO_DATE" dataType="NUMBER" value="so_date"/>
+			<element name="PO_NUMBER" dataType="NUMBER" value="po_number"/>
+			<element name="PO_DATE" dataType="NUMBER" value="po_date"/>
+			<element name="RECEIPT_NUM" dataType="NUMBER" value="receipt_num"/>
+			<element name="RECEIPT_DATE" dataType="NUMBER" value="receipt_date"/>
+			<element name="TAX_INVOICE_NUM" dataType="NUMBER" value="tax_invoice_num"/>
+		</group>
+	</dataStructure>
+</dataTemplate>
